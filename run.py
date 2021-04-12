@@ -1,16 +1,18 @@
 import timeit
+import random
 
 length=int(input('enter length of input numbers : '))
 
 
 inputs=[]
 
-for i in range(0,length):
-	inputs.append(i)
+
+while (len(inputs)!=length):
+	r=random.randint(0,length)
+	if (r not in inputs): 
+		inputs.append(r)
 
 print(inputs)
-
-
 
 def linearsearch(inputs,querry):
 	start=timeit.default_timer()
@@ -91,15 +93,18 @@ class binarysearchtree:
 			else:
 				self.left.find(querry)
 
-def make_binarysearchtree(inputs):
+def make_binarysearchtree(inputs,querry):
 
 	root=binarysearchtree(inputs[0])
 
 	for i in range(1,len(inputs)):
 		root.insert_node(inputs[i])
 
-def find_binarysearchtree(querry):
+	start=timeit.default_timer()	
 	root.find(querry)
+	stop=timeit.default_timer()
+	print('runtime for binary search tree : ',stop-start)	
+
 
 
 
@@ -110,4 +115,5 @@ linearsearch(inputs,20)
 
 binarysearch(inputs,20)
 
+make_binarysearchtree(inputs,20)
 
