@@ -93,8 +93,14 @@ class binarysearchtree:
 
 def make_binarysearchtree(inputs):
 
+	root=binarysearchtree(inputs[0])
+
+	for i in range(1,len(inputs)):
+		root.insert_node(inputs[i])
+
 def find_binarysearchtree(querry):
-								
+	root.find(querry)
+
 
 
 
