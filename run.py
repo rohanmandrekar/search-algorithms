@@ -10,6 +10,8 @@ for i in range(0,length):
 
 print(inputs)
 
+
+
 def linearsearch(inputs,querry):
 	start=timeit.default_timer()
 
@@ -25,6 +27,8 @@ def linearsearch(inputs,querry):
 	if (flag==0):
 		print('querry not found in given inputs')
 	print('runtime for linear search : ',stop-start)
+
+
 
 def binarysearch(inputs,querry):
 	start=timeit.default_timer()
@@ -45,6 +49,55 @@ def binarysearch(inputs,querry):
 		print('querry not found in inputs')	
 	stop=timeit.default_timer()
 	print('runtime of binary search : ',stop-start)				
+
+
+
+class binarysearchtree:
+
+	def __init__(self,data):
+		self.data=data
+		self.right=None
+		self.left=None
+
+	def insert_node(self,data):
+		
+
+		if (data > self.data):
+			if self.right is None:
+				self.right=binarysearchtree(data)
+			else:
+				self.right.insert_node(data)
+
+		elif (data < self.data):
+			if self.left is None:
+				self.left=binarysearchtree(data)
+			else:
+				self.left.insert_node(data)
+
+	def find(self,querry):
+
+		if (querry==self.data):
+			print('querry found in binary search tree')
+
+		if (querry > self.data):
+			if (self.right is None):
+				print('querry not found in inputs')
+			else:
+				self.right.find(querry)
+
+		if (querry < self.data):
+			if (self.left is None):
+				print('querry not found in inputs')
+			else:
+				self.left.find(querry)
+
+def make_binarysearchtree(inputs):
+
+def find_binarysearchtree(querry):
+								
+
+
+
 
 	
 linearsearch(inputs,20)	
