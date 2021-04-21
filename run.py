@@ -89,21 +89,21 @@ class binarysearchtree:
 	def findbst(self,querry):
 
 		if (querry==self.data):
-			print('querry found in binary search tree')
-			found=True
-			print(found)
-			return found
-
+			label=Label(tk,text='querry found in binary search tree.')
+			label.pack()
+			return 
 		if (querry > self.data):
 			if (self.right is None):
-				print('querry not found in inputs')
+				label=Label(tk,text='querry not found in binary search tree.')
+				label.pack()
 				return False
 			else:
 				self.right.findbst(querry)
 
 		if (querry < self.data):
 			if (self.left is None):
-				print('querry not found in inputs')
+				label=Label(tk,text='querry not found in binary search tree.')
+				label.pack()
 				# found=False
 				return False
 			else:
@@ -275,7 +275,6 @@ def make_redblacktree(inputs,querry):
 	found=rbt.find(rbt.root,querry)	
 	stop=timeit.default_timer()
 	print('search time for red black tree : ',stop-start)
-	print(found)
 	return found
 
 
@@ -338,13 +337,11 @@ def binarysearchtreeb(inputs,querry):
 	flag=make_binarysearchtree(inputs,querry)
 	stop=timeit.default_timer()
 	time= stop-start
-	if flag==True:
-		text="querry found in binary search tree. time taken =  %f" %time
-	else:
-		text="querry not found in binary search tree. time taken : %f"%time
+	label=Label(text='time taken : %f'%time)
+	label.pack()
 	
-	label=Label(tk,text=text)
-	label.pack(ipadx=10,ipady=10)
+	# label=Label(tk,text=text)
+	# label.pack(ipadx=10,ipady=10)
 
 def redblackb(inputs,querry):
 	label=Label(tk,text='')
@@ -406,6 +403,27 @@ def generate():
 # 	rbtbutton=Button(tk,text='Red Black Tree Search',command=redblackb(inputs,querry))
 # 	rbtbutton.pack()	
 
+# def clean():
+# 	tk.children.clear
+# 	label1=Label(tk,text='Enter the no. of inputs u want')
+# 	label1.pack()
+
+
+
+# 	e=Entry(tk, width=20)
+# 	e.pack()
+
+# 	label2=Label(tk,text='Enter the number you want to find')
+# 	label2.pack()
+
+# 	e2=Entry(tk,width=20)
+# 	e2.pack()
+# 	# length=int(input('length : '))
+# 	btn=Button(tk,text='submit', command=generate)
+# 	btn.pack()
+
+
+
 
 
 tk=Tk()
@@ -427,6 +445,9 @@ e2.pack()
 # length=int(input('length : '))
 btn=Button(tk,text='submit', command=generate)
 btn.pack()
+
+# btn2=Button(tk,text='Clear all outputs', command=clean)
+# btn2.pack()
 # label2=Label(tk,text='Enter the number you want to find')
 # label2.pack()
 # e2=Entry(tk,width=20)
