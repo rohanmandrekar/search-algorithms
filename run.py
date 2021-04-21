@@ -1,46 +1,43 @@
 import timeit
 import random
+from tkinter import *
+# from flask import Flask,request,render_template,redirect,url_for,make_response
 
-length=int(input('enter length of input numbers : '))
+# app = Flask(__name__)
 
 
-inputs=[]
-
-
-while (len(inputs)!=length):
-	r=random.randint(0,length)
-	if (r not in inputs): 
-		inputs.append(r)
-
-print(inputs)
-
-querry=int(input('Enter the number you want to find : '))
 
 def linearsearch(inputs,querry):
-	start=timeit.default_timer()
+	# start=timeit.default_timer()
 
 	flag=0
 	pos=0
 	for number in inputs:
 		if (querry==number):
 			print('querry found at index ',pos)
+			found=True
 			flag=1
-			break
+			stop=timeit.default_timer()	
+			# print('runtime for linear search : ',stop-start)
+			return found
 		pos+=1	
-	stop=timeit.default_timer()		
+	# stop=timeit.default_timer()		
 	if (flag==0):
 		print('querry not found in given inputs')
-	print('runtime for linear search : ',stop-start)
+		found=False
+	# print('runtime for linear search : ',stop-start)
+	return found
+
 
 
 
 def binarysearch(inputs,querry):
 
-	temp_inputs = inputs
+	temp_inputs = inputs.copy()
 	temp_inputs.sort()
 	print('temp inp',temp_inputs)
 
-	start=timeit.default_timer()
+	# start=timeit.default_timer()
 	high=len(temp_inputs)-1
 	low=0
 	flag=0
@@ -49,15 +46,21 @@ def binarysearch(inputs,querry):
 		if (temp_inputs[mid]==querry):
 			print('querry found at index ', mid)
 			flag=1
-			break
+			found=True
+			# stop=timeit.default_timer()
+			# print('runtime of binary search : ',stop-start)
+			return found
 		elif(querry<temp_inputs[mid]):
 			high=mid-1
 		elif(querry>temp_inputs[mid]):
 			low=mid+1
 	if (flag==0):
+		found=False
 		print('querry not found in inputs')	
-	stop=timeit.default_timer()
-	print('runtime of binary search : ',stop-start)				
+	# stop=timeit.default_timer()
+	# print('runtime of binary search : ',stop-start)
+	# stop=start=time
+	return found			
 
 
 
@@ -87,16 +90,22 @@ class binarysearchtree:
 
 		if (querry==self.data):
 			print('querry found in binary search tree')
+			found=True
+			print(found)
+			return found
 
 		if (querry > self.data):
 			if (self.right is None):
 				print('querry not found in inputs')
+				return False
 			else:
 				self.right.find(querry)
 
 		if (querry < self.data):
 			if (self.left is None):
 				print('querry not found in inputs')
+				# found=False
+				return False
 			else:
 				self.left.find(querry)
 
@@ -108,26 +117,29 @@ def make_binarysearchtree(inputs,querry):
 		root.insert_node(inputs[i])
 
 	start=timeit.default_timer()	
-	root.find(querry)
+	found=root.find(querry)
 	stop=timeit.default_timer()
+	print(found)
 	print('runtime for binary search tree : ',stop-start)	
+	
+	return found
 
-
-class NullNode:
-	def __init__(self, parent):
-		self.val = None
-		self.left = None
-		self.right = None
-		self.parent = parent
-		self.color = "BLACK"
 
 class RBNode:
-	def __init__(self, newval):
-		self.val = newval
+	def __init__(self, newdata):
+		self.data = newdata
 		self.left = NullNode(self)
 		self.right = NullNode(self)
 		self.parent = None
 		self.color = 'RED'
+
+class NullNode:
+	def __init__(self, parent):
+		self.data = None
+		self.left = None
+		self.right = None
+		self.parent = parent
+		self.color = "BLACK"
 
 
         
@@ -136,48 +148,47 @@ class redblacktree:
 	def __init__(self):
 		self.root = None
 
-	def search(self, tree, val):
+	def find(self, tree, data):
 		if self.root is None:
-			#print("That RedBlack Tree do not have any Node")
 			return None
-		if tree.val is None:
-			print(val, "is not in the red-black tree")
-			return tree
-		if tree.val > val:
-			return self.search(tree.left, val)
-		elif tree.val < val:
-			return self.search(tree.right, val)
+		if tree.data is None:
+			print("querry not found in red black tree")
+			found=False
+			return found
+		if tree.data > data:
+			return self.find(tree.left, data)
+		elif tree.data < data:
+			return self.find(tree.right, data)
 		else:
-			print('querry found in red-black tree')
-			return tree
+			print('querry found in red black tree')
+			found=True
+			return found
 
-	def insert(self, tree, n):
-			# init
+	def insert_node(self, tree, n):
+			
 			y = None
 			x = self.root
-			# self.insertNode += 1
-
-			# search inserting place
-			while x is not None and x.val is not None:
+			
+			while x is not None and x.data is not None:
 				y = x
-				if n.val < x.val:
+				if n.data < x.data:
 				    x = x.left
 				else:
 				    x = x.right
 
-				# insert new node
+				
 			n.parent = y
 			if y is None:
 				self.root = n
-			elif n.val < y.val:
+			elif n.data < y.data:
 				y.left = n
 			else:
 				y.right = n
 
-			# fix up RBT
-			self.RBT_Insert_Fixup(self, n)
+			
+			self.fix_insert(self, n)
 
-	def RBT_Insert_Fixup(self, tree, n):
+	def fix_insert(self, tree, n):
 		while n.parent is not None and n.parent.parent is not None and n.parent.color is 'RED':
 			if n.parent == n.parent.parent.left:
 				y = n.parent.parent.right
@@ -189,10 +200,10 @@ class redblacktree:
 				else:
 					if n == n.parent.right:
 						n = n.parent
-						self.Left_Rotate(tree, n)
+						self.leftrotate(tree, n)
 					n.parent.color = "BLACK"
 					n.parent.parent.color = "RED"
-					self.Right_Rotate(tree, n.parent.parent)
+					self.rightrotate(tree, n.parent.parent)
 			else:
 				y = n.parent.parent.left
 				if y is not None and y.color == "RED":
@@ -203,22 +214,22 @@ class redblacktree:
 				else:
 					if n == n.parent.left:
 						n = n.parent
-						self.Right_Rotate(tree, n)
+						self.rightrotate(tree, n)
 					n.parent.color = "BLACK"
 					n.parent.parent.color = "RED"
-					self.Left_Rotate(tree, n.parent.parent)
+					self.leftrotate(tree, n.parent.parent)
 		self.root.color = "BLACK"
 
-	def Left_Rotate(self, tree, x):
-            # set y
+	def leftrotate(self, tree, x):
+        
 		y = x.right
 
-		# insert subtree of y into x
+		
 		x.right = y.left
 		if y.left is not None:
 			y.left.parent = x
 
-		# link x's parent to y
+		
 		y.parent = x.parent
 		if x.parent is None:
 			tree.root = y
@@ -227,20 +238,20 @@ class redblacktree:
 		else:
 			x.parent.right = y
 
-		# put x on y's left
+		
 		y.left = x
 		x.parent = y
 
-	def Right_Rotate(self, tree, x):
-		# set y
+	def rightrotate(self, tree, x):
+		
 		y = x.left
 
-		# insert subtree of y into x
+		
 		x.left = y.right
 		if y.right is not None:
 			y.right.parent = x
 
-		# link x's parent to y
+		
 		y.parent = x.parent
 		if x.parent is None:
 			tree.root = y
@@ -249,7 +260,7 @@ class redblacktree:
 		else:
 			x.parent.right = y
 
-		# put x on y's right
+		
 		y.right = x
 		x.parent = y
 
@@ -259,20 +270,192 @@ def make_redblacktree(inputs,querry):
 	rbt=redblacktree()
 
 	for i in inputs:
-		rbt.insert(rbt.root,RBNode(i))
+		rbt.insert_node(rbt.root,RBNode(i))
 	start=timeit.default_timer()	
-	rbt.search(rbt.root,querry)	
+	found=rbt.find(rbt.root,querry)	
 	stop=timeit.default_timer()
 	print('search time for red black tree : ',stop-start)
+	print(found)
+	return found
+
+
+
+# @app.route("/",methods=["GET","POST"])
+# def home():
+
+# 	return render_template('home.html')
+
+
 
 
 
 	
-linearsearch(inputs,querry)	
+# a=linearsearch(inputs,querry)
 
-binarysearch(inputs,querry)
+# b=binarysearch(inputs,querry)
 
-make_binarysearchtree(inputs,querry)
+# c=make_binarysearchtree(inputs,querry)
 
-make_redblacktree(inputs,querry)
+# d=make_redblacktree(inputs,querry)
+# print(inputs)
+# li=[a,b,c,d]
+# print(li)
 
+def linearsearchb(inputs,querry):
+	label=Label(tk,text='')
+	label.pack()
+	start=timeit.default_timer()
+	flag=linearsearch(inputs,querry)
+	stop=timeit.default_timer()
+	time= stop-start
+	if flag==True:
+		text="querry found in linear search. time taken =  %f" %time
+	else:
+		text="querry not found in linear search. time taken : %f"%time
+	
+	label=Label(tk,text=text)
+	label.pack(ipadx=10,ipady=10)
+
+def binarysearchb(inputs,querry):
+	label=Label(tk,text='')
+	label.pack()
+	start=timeit.default_timer()
+	flag=binarysearch(inputs,querry)
+	stop=timeit.default_timer()
+	time= stop-start
+	if flag==True:
+		text="querry found in binary search. time taken =  %f" %time
+	else:
+		text="querry not found in binary search. time taken : %f"%time
+	
+	label=Label(tk,text=text)
+	label.pack(ipadx=10,ipady=10)
+
+def binarysearchtreeb(inputs,querry):
+	label=Label(tk,text='')
+	label.pack()
+	start=timeit.default_timer()
+	flag=make_binarysearchtree(inputs,querry)
+	stop=timeit.default_timer()
+	time= stop-start
+	if flag==True:
+		text="querry found in binary search tree. time taken =  %f" %time
+	else:
+		text="querry not found in binary search tree. time taken : %f"%time
+	
+	label=Label(tk,text=text)
+	label.pack(ipadx=10,ipady=10)
+
+def redblackb(inputs,querry):
+	label=Label(tk,text='')
+	label.pack()
+	start=timeit.default_timer()
+	flag=make_redblacktree(inputs,querry)
+	stop=timeit.default_timer()
+	time= stop-start
+	if flag==True:
+		text="querry found in Red-Black Tree. time taken =  %f" %time
+	else:
+		text="querry not found in Red-Black Tree. time taken : %f"%time
+	
+	label=Label(tk,text=text)
+	label.pack(ipadx=10,ipady=10)			
+
+
+
+
+# if __name__ == "__main__":
+#     app.run(host= '0.0.0.0', port=9000, debug=True)
+
+
+def generate():
+	x=e.get()
+	length=int(x)
+	inputs=[]
+	while (len(inputs)!=length):
+		r=random.randint(0,length)
+		if (r not in inputs): 
+			inputs.append(r)
+
+	print(inputs)
+	y=e2.get()
+	querry=int(y)
+	
+	
+
+
+
+	linearbutton=Button(tk,text='Linear Search',command=linearsearchb(inputs,querry))
+	linearbutton.pack()
+	binarybutton=Button(tk,text='Binary Search', command=binarysearchb(inputs,querry))
+	binarybutton.pack()
+	bstbutton=Button(tk,text='Binary Search Tree',command=binarysearchtreeb(inputs,querry))
+	bstbutton.pack()
+	rbtbutton=Button(tk,text='Red Black Tree Search',command=redblackb(inputs,querry))
+	rbtbutton.pack()
+
+# def run(inputs,e2):
+	
+
+# 	linearbutton=Button(tk,text='Linear Search',command=linearsearchb(inputs,querry))
+# 	linearbutton.pack()
+# 	binarybutton=Button(tk,text='Binary Search', command=binarysearchb(inputs,querry))
+# 	binarybutton.pack()
+# 	bstbutton=Button(tk,text='Binary Search Tree',command=binarysearchb(inputs,querry))
+# 	bstbutton.pack()
+# 	rbtbutton=Button(tk,text='Red Black Tree Search',command=redblackb(inputs,querry))
+# 	rbtbutton.pack()	
+
+
+
+tk=Tk()
+tk.geometry=("1920x1080")
+
+label1=Label(tk,text='Enter the no. of inputs u want')
+label1.pack()
+
+
+
+e=Entry(tk, width=20)
+e.pack()
+
+label2=Label(tk,text='Enter the number you want to find')
+label2.pack()
+
+e2=Entry(tk,width=20)
+e2.pack()
+# length=int(input('length : '))
+btn=Button(tk,text='submit', command=generate)
+btn.pack()
+# label2=Label(tk,text='Enter the number you want to find')
+# label2.pack()
+# e2=Entry(tk,width=20)
+# e2.pack()
+# btn2=Button(tk,command=run)
+# btn2.pack()
+
+
+
+# length1=int(e.get())
+
+# label1.pack()
+
+
+# submitbtn=Button(tk, text='submit', command=generate())
+
+
+# inputs=[]
+
+
+# while (len(inputs)!=length):
+# 	r=random.randint(0,length)
+# 	if (r not in inputs): 
+# 		inputs.append(r)
+
+# print(inputs)
+
+# querry=int(input('Enter the number you want to find : '))
+
+
+
+tk.mainloop()
