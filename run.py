@@ -86,7 +86,7 @@ class binarysearchtree:
 			else:
 				self.left.insert_node(data)
 
-	def find(self,querry):
+	def findbst(self,querry):
 
 		if (querry==self.data):
 			print('querry found in binary search tree')
@@ -99,7 +99,7 @@ class binarysearchtree:
 				print('querry not found in inputs')
 				return False
 			else:
-				self.right.find(querry)
+				self.right.findbst(querry)
 
 		if (querry < self.data):
 			if (self.left is None):
@@ -107,7 +107,7 @@ class binarysearchtree:
 				# found=False
 				return False
 			else:
-				self.left.find(querry)
+				self.left.findbst(querry)
 
 def make_binarysearchtree(inputs,querry):
 
@@ -117,7 +117,7 @@ def make_binarysearchtree(inputs,querry):
 		root.insert_node(inputs[i])
 
 	start=timeit.default_timer()	
-	found=root.find(querry)
+	found=root.findbst(querry)
 	stop=timeit.default_timer()
 	print(found)
 	print('runtime for binary search tree : ',stop-start)	
