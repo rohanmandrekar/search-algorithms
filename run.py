@@ -115,12 +115,9 @@ def make_binarysearchtree(inputs,querry):
 
 	for i in range(1,len(inputs)):
 		root.insert_node(inputs[i])
-
-	start=timeit.default_timer()	
+	
 	found=root.findbst(querry)
-	stop=timeit.default_timer()
-	print(found)
-	print('runtime for binary search tree : ',stop-start)	
+
 	
 	return found
 
@@ -271,10 +268,8 @@ def make_redblacktree(inputs,querry):
 
 	for i in inputs:
 		rbt.insert_node(rbt.root,RBNode(i))
-	start=timeit.default_timer()	
 	found=rbt.find(rbt.root,querry)	
-	stop=timeit.default_timer()
-	print('search time for red black tree : ',stop-start)
+	
 	return found
 
 
