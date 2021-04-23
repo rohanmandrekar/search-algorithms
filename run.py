@@ -1,6 +1,8 @@
 import timeit
 import random
 from tkinter import *
+
+
 # from flask import Flask,request,render_template,redirect,url_for,make_response
 
 # app = Flask(__name__)
@@ -31,11 +33,9 @@ def linearsearch(inputs,querry):
 
 
 
-def binarysearch(inputs,querry):
+def binarysearch(temp_inputs,querry):
 
-	temp_inputs = inputs.copy()
-	temp_inputs.sort()
-	print('temp inp',temp_inputs)
+	
 
 	# start=timeit.default_timer()
 	high=len(temp_inputs)-1
@@ -115,11 +115,12 @@ def make_binarysearchtree(inputs,querry):
 
 	for i in range(1,len(inputs)):
 		root.insert_node(inputs[i])
-	
+	start=timeit.default_timer()	
 	found=root.findbst(querry)
-
+	stop=timeit.default_timer()
+	time=stop-start
 	
-	return found
+	return found,time
 
 
 class RBNode:
@@ -145,17 +146,17 @@ class redblacktree:
 	def __init__(self):
 		self.root = None
 
-	def find(self, tree, data):
+	def find(self, tree, querry):
 		if self.root is None:
 			return None
 		if tree.data is None:
 			print("querry not found in red black tree")
 			found=False
 			return found
-		if tree.data > data:
-			return self.find(tree.left, data)
-		elif tree.data < data:
-			return self.find(tree.right, data)
+		if tree.data > querry:
+			return self.find(tree.left, querry)
+		elif tree.data < querry:
+			return self.find(tree.right, querry)
 		else:
 			print('querry found in red black tree')
 			found=True
@@ -268,9 +269,11 @@ def make_redblacktree(inputs,querry):
 
 	for i in inputs:
 		rbt.insert_node(rbt.root,RBNode(i))
+	start=timeit.default_timer()
 	found=rbt.find(rbt.root,querry)	
-	
-	return found
+	stop=timeit.default_timer()
+	time=stop-start
+	return found,time
 
 
 
@@ -311,10 +314,13 @@ def linearsearchb(inputs,querry):
 	label.pack(ipadx=10,ipady=10)
 
 def binarysearchb(inputs,querry):
+	temp_inputs = inputs.copy()
+	temp_inputs.sort()
+	print('temp inp',temp_inputs)
 	label=Label(tk,text='')
 	label.pack()
 	start=timeit.default_timer()
-	flag=binarysearch(inputs,querry)
+	flag=binarysearch(temp_inputs,querry)
 	stop=timeit.default_timer()
 	time= stop-start
 	if flag==True:
@@ -329,11 +335,13 @@ def binarysearchtreeb(inputs,querry):
 	label=Label(tk,text='')
 	label.pack()
 	start=timeit.default_timer()
-	flag=make_binarysearchtree(inputs,querry)
+	flag,time1=make_binarysearchtree(inputs,querry)
 	stop=timeit.default_timer()
 	time= stop-start
-	label=Label(text='time taken : %f'%time)
+	label=Label(text='time taken : %f'%time1)
 	label.pack()
+	label2=Label(tk,text="build and search time = %f" %time)
+	label2.pack()
 	
 	# label=Label(tk,text=text)
 	# label.pack(ipadx=10,ipady=10)
@@ -342,16 +350,20 @@ def redblackb(inputs,querry):
 	label=Label(tk,text='')
 	label.pack()
 	start=timeit.default_timer()
-	flag=make_redblacktree(inputs,querry)
+	flag,time1=make_redblacktree(inputs,querry)
 	stop=timeit.default_timer()
 	time= stop-start
 	if flag==True:
-		text="querry found in Red-Black Tree. time taken =  %f" %time
+		text="querry found in Red-Black Tree.  search time taken =  %f" %time1
+		text1="build and search time = %f" %time
 	else:
-		text="querry not found in Red-Black Tree. time taken : %f"%time
+		text="querry not found in Red-Black Tree. time taken : %f"%time1
+		text1="build and search time = %f" %time
 	
 	label=Label(tk,text=text)
-	label.pack(ipadx=10,ipady=10)			
+	label.pack(ipadx=10,ipady=10)
+	label2=Label(tk,text=text1)
+	label2.pack()			
 
 
 
@@ -426,8 +438,6 @@ tk.geometry=("1920x1080")
 
 label1=Label(tk,text='Enter the no. of inputs u want')
 label1.pack()
-
-
 
 e=Entry(tk, width=20)
 e.pack()
